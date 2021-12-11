@@ -69,12 +69,31 @@
           <mat-card *ngIf="preview !== ''">
             {{ getDialogueItemById(preview).npc }}
             <br><br>
-            <mat-chip-list>
+
+            <mat-chip-list *ngIf="getDialogueItemById(preview).type == 'single'">
               <mat-chip *ngFor="let response of getDialogueItemById(preview).responses"
                 (click)="setPreview(response.followUp)">
                 {{ response.response }}
               </mat-chip>
             </mat-chip-list>
+
+            <div *ngIf="getDialogueItemById(preview).type == 'open'">
+              <mat-form-field appearance="outline">
+                <mat-label>Answer</mat-label>
+                <input matInput>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
+            </div>
+
+            <div *ngIf="getDialogueItemById(preview).type == 'multi'">
+              <mat-checkbox *ngFor="let response of getDialogueItemById(preview).responses">
+                {{ response.response }}&nbsp;
+              </mat-checkbox>
+              <br><br>
+
+              <button mat-raised-button color="primary" (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
+            </div>
           </mat-card>
 
           <button mat-raised-button (click)="setPreview(form.get('start')?.value)">Reset preview</button>

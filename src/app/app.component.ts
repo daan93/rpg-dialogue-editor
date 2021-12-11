@@ -54,6 +54,8 @@ export class AppComponent implements OnInit {
     return this.formBuilder.group({
       uid: uuid.v4(),
       npc: '',
+      type: 'single',
+      followUp: '',
       responses: new FormArray([])
     });
   }
@@ -101,6 +103,8 @@ export class AppComponent implements OnInit {
         let dialogueItemFormGroup = this.formBuilder.group({
           uid: dialogueItem.uid ? dialogueItem.uid : uuid.v4(),
           npc: dialogueItem.npc ? dialogueItem.npc : '',
+          type: dialogueItem.type ? dialogueItem.type : 'single',
+          followUp: dialogueItem.followUp ? dialogueItem.followUp : '',
           responses: new FormArray([])
         });
 

@@ -1,5 +1,27 @@
 <mat-card [formGroup]="form">
+    <div>
+        {{ form.controls['uid'].value }}
+        <br><br>
+    </div>
+
     <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option value="open">
+                        Open answer
+                    </mat-option>
+                    <mat-option value="single">
+                        Single answer
+                    </mat-option>
+                    <mat-option value="multi">
+                        Multi answer
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
         <div fxFlex>
             <mat-form-field appearance="outline">
                 <mat-label>NPC Speech</mat-label>
@@ -14,40 +36,53 @@
         </div>
     </div>
 
-    <ng-container formArrayName="responses" *ngFor="let item of getResponses().controls; let i = index;">
-        <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start" [formGroupName]="i">
-            <div fxFlex>
-                <mat-form-field appearance="outline">
-                    <mat-label>Character Response</mat-label>
-                    <input matInput formControlName="response">
-                </mat-form-field>
-            </div>
+    <ng-container *ngIf="form.controls['type'].value !== 'single'">
+        <mat-form-field appearance="outline">
+            <mat-label>Follow-up</mat-label>
+            <mat-select formControlName="followUp">
+                <mat-option *ngFor="let item of dialogue; let i = index;" [value]="item.controls.uid.value">
+                    {{ item.controls.npc.value }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </ng-container>
 
-            <div fxFlex>
-                <mat-form-field appearance="outline">
-                    <mat-label>Follow-up</mat-label>
-                    <mat-select formControlName="followUp">
-                        <mat-option *ngFor="let item of dialogue; let i = index;" [value]="item.controls.uid.value">
-                            {{ item.controls.npc.value }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </div>
+    <ng-container *ngIf="form.controls['type'].value !== 'open'">
+        <ng-container formArrayName="responses" *ngFor="let item of getResponses().controls; let i = index;">
+            <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start" [formGroupName]="i">
+                <div fxFlex>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Character Response</mat-label>
+                        <input matInput formControlName="response">
+                    </mat-form-field>
+                </div>
 
-            <div style="height: 64px;" fxLayout="row" fxLayoutAlign="start center">
-                <button mat-icon-button color="primary" (click)="addResponse(i)">
-                    <mat-icon>add_circle_outline</mat-icon>
-                </button>
-                <button mat-icon-button color="primary" (click)="deleteResponse(i)">
-                    <mat-icon>remove_circle_outline</mat-icon>
-                </button>
+                <div fxFlex *ngIf="form.controls['type'].value !== 'multi'">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Follow-up</mat-label>
+                        <mat-select formControlName="followUp">
+                            <mat-option *ngFor="let item of dialogue; let i = index;" [value]="item.controls.uid.value">
+                                {{ item.controls.npc.value }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div style="height: 64px;" fxLayout="row" fxLayoutAlign="start center">
+                    <button mat-icon-button color="primary" (click)="addResponse(i)">
+                        <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" (click)="deleteResponse(i)">
+                        <mat-icon>remove_circle_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+
+        <div class="mdc-layout-grid__inner" *ngIf="getResponses().length == 0">
+            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+                <button mat-raised-button (click)="addResponse(0)">Add a response</button>
             </div>
         </div>
     </ng-container>
-
-    <div class="mdc-layout-grid__inner" *ngIf="getResponses().length == 0">
-        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-            <button mat-raised-button (click)="addResponse(0)">Add a response</button>
-        </div>
-    </div>
 </mat-card>
