@@ -16,6 +16,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
+import { MyReteEditorModule } from "./rete/rete.module";
+
 import { AppComponent } from './app.component';
 import { DialogueItemComponent } from './dialogue-item/dialogue-item.component';
 
@@ -40,6 +42,7 @@ import { DialogueItemComponent } from './dialogue-item/dialogue-item.component';
     MatChipsModule,
     MatIconModule,
     MatCheckboxModule,
+    MyReteEditorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
