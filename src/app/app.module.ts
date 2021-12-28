@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -18,17 +20,20 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { AppComponent } from './app.component';
 import { DialogueItemComponent } from './dialogue-item/dialogue-item.component';
+import { DialogueNodeComponent } from './dialogue-node/dialogue-node';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    DialogueItemComponent
+    DialogueItemComponent,
+    DialogueNodeComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    DragDropModule,
     FlexLayoutModule,
     MatToolbarModule,
     MatTabsModule,

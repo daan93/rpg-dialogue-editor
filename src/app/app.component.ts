@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
 import * as uuid from 'uuid';
+import panzoom from 'panzoom';
+import { PanZoom } from 'panzoom';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +20,32 @@ export class AppComponent implements OnInit {
   });
 
   preview: string = '';
+
+  zoomScale = 1;
+  zoomFactor = 0.05;
+  panzoomCanvas!: PanZoom;
+
+  @ViewChild('canvas') canvasElement!: ElementRef;
+
+  ngAfterViewInit() {
+    this.panzoomCanvas = panzoom(this.canvasElement.nativeElement, {
+      maxZoom: 1,
+      minZoom: 0.1,
+    });
+
+    this.panzoomCanvas.on('transform', (e) => {
+      let result = this.panzoomCanvas.getTransform();
+      this.zoomScale = result.scale;
+    });
+  }
+
+  pausePanzoom() {
+    this.panzoomCanvas.pause();
+  }
+
+  resumePanzoom() {
+    this.panzoomCanvas.resume();
+  }
 
   constructor(private formBuilder: FormBuilder) { }
 

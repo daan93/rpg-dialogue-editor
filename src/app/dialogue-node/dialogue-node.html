@@ -1,0 +1,37 @@
+<div
+  class="example-box"
+  [ngStyle]="{ left: pos.x + 'px', top: pos.y + 'px' }"
+  cdkDrag
+  [cdkDragDisabled]="dragDisabled"
+  (cdkDragStarted)="startDragging($event)"
+  (cdkDragEnded)="endDragging($event)"
+  [cdkDragConstrainPosition]="dragConstrainPoint"
+  [cdkDragFreeDragPosition]="pos"
+>
+  <div class="question">
+    <div
+      class="socket"
+      (pointerdown)="socketDown()"
+      (pointerup)="socketUp()"
+    ></div>
+    <span>Can I ask a question?</span>
+  </div>
+  <ul>
+    <li>
+      <span>Yes</span>
+      <div
+        class="socket"
+        (pointerdown)="socketDown()"
+        (pointerup)="socketUp()"
+      ></div>
+    </li>
+    <li>
+      <span>No</span>
+      <div
+        class="socket"
+        (pointerdown)="socketDown()"
+        (pointerup)="socketUp()"
+      ></div>
+    </li>
+  </ul>
+</div>
