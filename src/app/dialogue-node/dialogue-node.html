@@ -12,8 +12,8 @@
   <div class="question">
     <app-dialogue-node-socket
       [uid]="item.uid"
-      (pointerdown)="socketDown()"
-      (pointerup)="socketUp()"
+      (pointerdown)="InputSocketDown(item.uid)"
+      (pointerup)="InputSocketUp(item.uid)"
     ></app-dialogue-node-socket>
     <span>{{ item.npc }}</span>
   </div>
@@ -22,8 +22,8 @@
       <span>{{ response.response }}</span>
       <app-dialogue-node-socket
         [uid]="response.uid"
-        (pointerdown)="socketDown()"
-        (pointerup)="socketUp()"
+        (pointerdown)="OutputSocketDown(response.uid)"
+        (pointerup)="OutputSocketUp(response.uid)"
       ></app-dialogue-node-socket>
     </li>
   </ul>

@@ -28,6 +28,8 @@ export class DialogueNodeComponent implements OnInit {
 
   @Output() dragStart = new EventEmitter<any>();
   @Output() dragEnd = new EventEmitter<any>();
+  @Output() socketDown = new EventEmitter<any>();
+  @Output() socketUp = new EventEmitter<any>();
   @Output() positionsUpdated = new EventEmitter<any>();
 
   draggedPos = { x: 0, y: 0 };
@@ -51,25 +53,29 @@ export class DialogueNodeComponent implements OnInit {
     this.uid = this.item.uid;
   }
 
-  socketDown() {
+  InputSocketDown(uid: string) {
     this.dragDisabled = true;
-    this.dragStart.emit();
+    this.socketDown.emit({type: 'input', itemUID: this.item.uid, socketUID: uid});
   }
 
-  socketUp() {
+  InputSocketUp(uid: string) {
     this.dragDisabled = false;
-    this.dragEnd.emit();
+    this.socketUp.emit({type: 'input', itemUID: this.item.uid, socketUID: uid});
+  }
+
+  OutputSocketDown(uid: string) {
+    this.dragDisabled = true;
+    this.socketDown.emit({type: 'output', itemUID: this.item.uid, socketUID: uid});
+  }
+
+  OutputSocketUp(uid: string) {
+    this.dragDisabled = false;
+    this.socketUp.emit({type: 'output', itemUID: this.item.uid, socketUID: uid});
   }
 
   dragConstrainPoint = (point: Point, dragRef: DragRef) => {
     let zoomMoveXDifference = 0;
     let zoomMoveYDifference = 0;
-    // console.log(
-    //   'freeDragPosition dragRef: ' +
-    //     Math.round(dragRef.getFreeDragPosition().x) +
-    //     ' / ' +
-    //     Math.round(dragRef.getFreeDragPosition().y)
-    // );
 
     if (this.zoomScale != 1) {
       zoomMoveXDifference =
@@ -77,21 +83,6 @@ export class DialogueNodeComponent implements OnInit {
       zoomMoveYDifference =
         (1 - this.zoomScale) * dragRef.getFreeDragPosition().y;
     }
-    // console.log(
-    //   'zoomMoveXDifference x/y: ' +
-    //     Math.round(zoomMoveXDifference) +
-    //     ' / ' +
-    //     Math.round(zoomMoveYDifference)
-    // );
-    // console.log(
-    //   'Point x/y: ' + Math.round(point.x) + ' / ' + Math.round(point.y)
-    // );
-    // console.log(
-    //   'Sum x/y: ' +
-    //     Math.round(point.x + zoomMoveXDifference) +
-    //     ' / ' +
-    //     Math.round(point.y + zoomMoveYDifference)
-    // );
 
     return {
       x: point.x + zoomMoveXDifference,
@@ -108,32 +99,6 @@ export class DialogueNodeComponent implements OnInit {
     const elementMovingRect: ClientRect = elementMoving.getBoundingClientRect();
     const elementMovingParentElementRect: ClientRect =
       elementMoving.parentElement!.getBoundingClientRect();
-    /* The getBoundingClientRect() method returns the size of an element and its position relative to the viewport.
-    This method returns a DOMRect object with eight properties: left, top, right, bottom, x, y, width, height. https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_element_getboundingclientrect*/
-    // console.log(
-    //   'elementMovingParentElementRect .left/.top: ' +
-    //     Math.trunc(elementMovingParentElementRect.left) +
-    //     ' / ' +
-    //     Math.trunc(elementMovingParentElementRect.top)
-    // );
-    // console.log(
-    //   'elementMovingRect .left/.top: ' +
-    //     Math.trunc(elementMovingRect.left) +
-    //     ' / ' +
-    //     Math.trunc(elementMovingRect.top)
-    // );
-    // console.log(
-    //   'Difference scaled .left/.top: ' +
-    //     Math.trunc(
-    //       (elementMovingRect.left - elementMovingParentElementRect.left) /
-    //         this.zoomScale
-    //     ) +
-    //     ' / ' +
-    //     Math.trunc(
-    //       (elementMovingRect.top - elementMovingParentElementRect.top) /
-    //         this.zoomScale
-    //     )
-    // );
 
     this.draggedPos.x =
       (elementMovingRect.left - elementMovingParentElementRect.left) /
@@ -148,32 +113,6 @@ export class DialogueNodeComponent implements OnInit {
     const elementMovingRect: ClientRect = elementMoving.getBoundingClientRect();
     const elementMovingParentElementRect: ClientRect =
       elementMoving.parentElement!.getBoundingClientRect();
-    /* The getBoundingClientRect() method returns the size of an element and its position relative to the viewport.
-    This method returns a DOMRect object with eight properties: left, top, right, bottom, x, y, width, height. https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_element_getboundingclientrect*/
-    // console.log(
-    //   'elementMovingParentElementRect .left/.top: ' +
-    //     Math.trunc(elementMovingParentElementRect.left) +
-    //     ' / ' +
-    //     Math.trunc(elementMovingParentElementRect.top)
-    // );
-    // console.log(
-    //   'elementMovingRect .left/.top: ' +
-    //     Math.trunc(elementMovingRect.left) +
-    //     ' / ' +
-    //     Math.trunc(elementMovingRect.top)
-    // );
-    // console.log(
-    //   'Difference scaled .left/.top: ' +
-    //     Math.trunc(
-    //       (elementMovingRect.left - elementMovingParentElementRect.left) /
-    //         this.zoomScale
-    //     ) +
-    //     ' / ' +
-    //     Math.trunc(
-    //       (elementMovingRect.top - elementMovingParentElementRect.top) /
-    //         this.zoomScale
-    //     )
-    // );
 
     this.pos.x =
       (elementMovingRect.left - elementMovingParentElementRect.left) /

@@ -50,6 +50,13 @@ export class AppComponent implements OnInit {
     });
   }
 
+  onSetResponseFollowUp(event: any) {
+    const item = this.getDialogue().at(this.getDialogue().value.map((p: any) => ({ ...p, index: this.getDialogue().value.indexOf(p) })).findIndex((x: any) => x.uid === event.item));
+    const responses = item.get('responses') as FormArray;
+    const response = responses!.at(responses.value.map((p: any) => ({ ...p, index: responses.value.indexOf(p) })).findIndex((x: any) => x.uid === event.response));
+    response.patchValue({'followUp': event.followUp});
+  }
+
   onSelectedTabChange(event: MatTabChangeEvent) {
     if (event.index === 2) { }
   }

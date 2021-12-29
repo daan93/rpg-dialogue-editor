@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ElementRef, AfterViewInit, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, HostListener, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import * as uuid from 'uuid';
@@ -11,39 +11,102 @@ import { DialogueNodeComponent } from './../dialogue-node/dialogue-node';
 @Component({
   selector: 'app-node-editor',
   templateUrl: './node-editor.component.html',
-  styleUrls: ['./node-editor.component.scss']
+  styleUrls: ['./node-editor.component.scss'],
 })
 export class NodeEditorComponent implements OnInit {
   @Input() dialogue!: FormArray;
 
-  preview: string = '';
-  zoomScale = 1;
+  nativeElement;
+  panzoomTransform = {scale: 1, x: 0, y: 0};
   panzoomCanvas!: PanZoom;
   sockets: Socket[] = [];
+  addNewConnection: any = null;
+  mousePosition: any = {x: 0, y: 0};
+
+  @Output() setResponseFollowUp = new EventEmitter<any>();
 
   @ViewChild('canvas') canvasElement!: ElementRef;
 
   @ViewChildren(DialogueNodeComponent) dialogueNodes!: QueryList<DialogueNodeComponent>;
 
-  constructor(private cd: ChangeDetectorRef) { }
+  @HostListener('mousemove', ['$event']) 
+  onMouseMove(e: MouseEvent) {
+    this.mousePosition = {x: e.x, y: e.y}
+  }
+
+  @HostListener('mouseup', ['$event']) 
+  onMouseUp(e: MouseEvent) {
+    if (this.addNewConnection) this.addNewConnection = null;
+    this.dialogueNodes.forEach((node: DialogueNodeComponent) => { node.dragDisabled = false});
+  }
+
+  constructor(
+    private cd: ChangeDetectorRef,
+    private element: ElementRef) { 
+    this.nativeElement = element.nativeElement;
+  }
 
   ngAfterViewInit() {
-    console.log('afterviewinit');
-
     this.panzoomCanvas = panzoom(this.canvasElement.nativeElement, {
       maxZoom: 1,
       minZoom: 0.1,
     });
 
     this.panzoomCanvas.on('transform', (e) => {
-      let result = this.panzoomCanvas.getTransform();
-      this.zoomScale = result.scale;
+      this.panzoomTransform = this.panzoomCanvas.getTransform();
     });
     
     this.cd.detectChanges();
   }
 
   ngOnInit(): void {
+  }
+
+  onSocketDown(event: any) {
+    this.addNewConnection = event;
+    this.pausePanzoom();
+  }
+
+  onSocketUp(event: any) {
+    console.log(event);
+    if (event.type === 'input' && this.addNewConnection.type === 'output') {
+      this.setResponseFollowUp.emit({
+        item: this.addNewConnection.itemUID, 
+        response: this.addNewConnection.socketUID, 
+        followUp: event.itemUID });
+    }
+    else if (event.type === 'output' && this.addNewConnection.type === 'input') {
+      this.setResponseFollowUp.emit({
+        item: event.itemUID, 
+        response: event.socketUID, 
+        followUp: this.addNewConnection.itemUID });
+    }
+    this.addNewConnection = null;
+    this.resumePanzoom();
+  }
+
+  getNewResponsePath() {
+    const dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.uid === this.addNewConnection.itemUID);
+    const socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === this.addNewConnection.socketUID);
+    const nativeElementRect: ClientRect = this.nativeElement.getBoundingClientRect();
+
+    const points = {
+      start: {
+        x: dialogueNode.draggedPos.x + socket.nativeElement.offsetLeft + 8,
+        y: dialogueNode.draggedPos.y + socket.nativeElement.offsetTop + 8,
+      },
+      end: {
+        x: (this.mousePosition.x - this.panzoomTransform.x) / this.panzoomTransform.scale - nativeElementRect.left / this.panzoomTransform.scale,
+        y: (this.mousePosition.y - this.panzoomTransform.y) / this.panzoomTransform.scale - nativeElementRect.top / this.panzoomTransform.scale,
+      }
+    }
+
+    const pathDirection = this.addNewConnection.type === 'output' ? 1 : -1;
+
+    return `M ${points.start.x},${points.start.y} 
+    C ${points.start.x + 50 * pathDirection},${points.start.y}  
+      ${points.end.x - 50 * pathDirection},${points.end.y}  
+      ${points.end.x},${points.end.y}`
   }
 
   getDialogUID(item: any) {
@@ -60,6 +123,10 @@ export class NodeEditorComponent implements OnInit {
 
   resumePanzoom() {
     this.panzoomCanvas.resume();
+  }
+
+  getConnections(uid: string) {
+    return this.getDialogueItemById(uid).responses.filter((response: any) => response.followUp !== '');
   }
 
   getResponsePath(item: any, response: any) {
