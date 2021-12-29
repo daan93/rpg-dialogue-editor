@@ -4,34 +4,27 @@
   cdkDrag
   [cdkDragDisabled]="dragDisabled"
   (cdkDragStarted)="startDragging($event)"
+  (cdkDragMoved)="dragging($event)"
   (cdkDragEnded)="endDragging($event)"
   [cdkDragConstrainPosition]="dragConstrainPoint"
   [cdkDragFreeDragPosition]="pos"
 >
   <div class="question">
-    <div
-      class="socket"
+    <app-dialogue-node-socket
+      [uid]="item.uid"
       (pointerdown)="socketDown()"
       (pointerup)="socketUp()"
-    ></div>
-    <span>Can I ask a question?</span>
+    ></app-dialogue-node-socket>
+    <span>{{ item.npc }}</span>
   </div>
   <ul>
-    <li>
-      <span>Yes</span>
-      <div
-        class="socket"
+    <li *ngFor="let response of item.responses">
+      <span>{{ response.response }}</span>
+      <app-dialogue-node-socket
+        [uid]="response.uid"
         (pointerdown)="socketDown()"
         (pointerup)="socketUp()"
-      ></div>
-    </li>
-    <li>
-      <span>No</span>
-      <div
-        class="socket"
-        (pointerdown)="socketDown()"
-        (pointerup)="socketUp()"
-      ></div>
+      ></app-dialogue-node-socket>
     </li>
   </ul>
 </div>

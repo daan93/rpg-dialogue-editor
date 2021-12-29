@@ -1,0 +1,23 @@
+#canvas-wrapper {
+    width: 100%;
+    height: calc(100vh - 112px);
+    overflow: hidden;
+  
+    > div {
+      display: flex;
+    }
+  
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: visible!important;
+    }
+  
+    app-dialogue-node {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+    

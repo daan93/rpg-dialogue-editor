@@ -1,8 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import * as uuid from 'uuid';
 import panzoom from 'panzoom';
 import { PanZoom } from 'panzoom';
+
+import { Socket } from './dialogue-node-socket/dialogue-node-socket.component';
+import { DialogueNodeComponent } from './dialogue-node/dialogue-node';
 
 @Component({
   selector: 'app-root',
@@ -20,39 +24,19 @@ export class AppComponent implements OnInit {
   });
 
   preview: string = '';
-
   zoomScale = 1;
-  zoomFactor = 0.05;
   panzoomCanvas!: PanZoom;
+  sockets: Socket[] = [];
 
   @ViewChild('canvas') canvasElement!: ElementRef;
 
-  ngAfterViewInit() {
-    this.panzoomCanvas = panzoom(this.canvasElement.nativeElement, {
-      maxZoom: 1,
-      minZoom: 0.1,
-    });
+  @ViewChildren(DialogueNodeComponent) dialogueNodes!: QueryList<DialogueNodeComponent>;
 
-    this.panzoomCanvas.on('transform', (e) => {
-      let result = this.panzoomCanvas.getTransform();
-      this.zoomScale = result.scale;
-    });
-  }
-
-  pausePanzoom() {
-    this.panzoomCanvas.pause();
-  }
-
-  resumePanzoom() {
-    this.panzoomCanvas.resume();
-  }
-
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.form.valueChanges.subscribe(val => {
-      // update JSON
-    });
+    this.fromJSON('{"name":"Vegetarian","key":"vegetarian","start":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","dialogue":[{"uid":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","npc":"Are you a vegetarian?","type":"single","followUp":"","responses":[{"uid":"5e360956-7a7f-47ed-9b39-589f0bf72e4b","response":"Yes","followUp":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf"},{"uid":"3d34c343-66a6-4620-9d89-0b996fb25438","response":"No","followUp":"8221ea46-03e1-4206-a3f6-4d399d4292bc"}]},{"uid":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf","npc":"What is your favorite vegetarian food?","type":"single","followUp":"","responses":[{"uid":"0a92a48b-0407-435a-9ef7-ce1fc0c54427","response":"Salad","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"553b0727-1f41-4a08-8a8a-e3e8f7404d9c","response":"Soup","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}]},{"uid":"8221ea46-03e1-4206-a3f6-4d399d4292bc","npc":"What is your favorite food?","type":"single","followUp":"","responses":[{"uid":"61177e3f-b6a8-4e56-b869-1f9d3819ae1b","response":"Burger","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"5748ad93-e2f5-4ef3-a3d6-84b8772d61e6","response":"Steak","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"e5738c09-1ad0-4c9a-be4a-4c565428eaab","response":"Ribs","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}]},{"uid":"ca4509f5-019c-456f-a314-bac19573f87e","npc":"Thank you!","type":"single","followUp":"","responses":[]}]}')
 
     this.form.get('start')?.valueChanges.subscribe(start => {
       this.preview = start;
@@ -64,6 +48,10 @@ export class AppComponent implements OnInit {
         this.form.controls['key'].setValue(name.toLowerCase());
       }
     });
+  }
+
+  onSelectedTabChange(event: MatTabChangeEvent) {
+    if (event.index === 2) { }
   }
 
   getDialogUID(item: any) {
@@ -116,7 +104,7 @@ export class AppComponent implements OnInit {
       alert("JSON could not be parsed: " + error);
       return;
     }
-    
+
     this.form.reset();
     this.getDialogue().clear();
     this.preview = '';

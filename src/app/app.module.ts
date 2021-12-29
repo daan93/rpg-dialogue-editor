@@ -21,6 +21,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AppComponent } from './app.component';
 import { DialogueItemComponent } from './dialogue-item/dialogue-item.component';
 import { DialogueNodeComponent } from './dialogue-node/dialogue-node';
+import { DialogueNodeSocketComponent } from './dialogue-node-socket/dialogue-node-socket.component';
+import { NodeEditorComponent } from './node-editor/node-editor.component';
 
 
 @NgModule({
@@ -28,6 +30,8 @@ import { DialogueNodeComponent } from './dialogue-node/dialogue-node';
     AppComponent,
     DialogueItemComponent,
     DialogueNodeComponent,
+    DialogueNodeSocketComponent,
+    NodeEditorComponent,
   ],
   imports: [
     BrowserModule,

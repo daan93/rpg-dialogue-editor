@@ -1,0 +1,15 @@
+<div id="canvas-wrapper">
+    <div #canvas>
+      <ng-container *ngFor="let item of dialogue.controls; let i = index;">
+
+        <svg viewBox="-1 -1 102 52" width="102px" height="52px"
+          *ngFor="let response of getDialogueItemById(getDialogUID(item)).responses">
+          <path [attr.d]="getResponsePath(item, response)" stroke="#3F51B5" stroke-width="3" fill="none" />
+        </svg>
+
+        <app-dialogue-node [zoomScale]="zoomScale" [item]="getDialogueItemById(getDialogUID(item))"
+          (dragStart)="pausePanzoom()" (dragEnd)="resumePanzoom()">
+        </app-dialogue-node>
+      </ng-container>
+    </div>
+  </div>

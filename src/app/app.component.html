@@ -2,7 +2,7 @@
   <span>RPG Dialogue Editor</span>
 </mat-toolbar>
 
-<mat-tab-group backgroundColor="primary">
+<mat-tab-group backgroundColor="primary" (selectedTabChange)="onSelectedTabChange($event)">
   <mat-tab label="Dialogue">
     <div class="mdc-layout-grid">
       <div class="mdc-layout-grid__inner">
@@ -44,12 +44,13 @@
 
           <mat-form-field appearance="outline">
             <mat-label>JSON</mat-label>
-            <textarea matInput placeholder="Paste JSON here and click import button" rows="12" [formControl]="import"></textarea>
+            <textarea matInput placeholder="Paste JSON here and click import button" rows="12"
+              [formControl]="import"></textarea>
           </mat-form-field>
 
           <button mat-raised-button color="primary" (click)="fromJSON(import.value)">Import</button>
         </div>
-        
+
         <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
           <h3>Export</h3>
 
@@ -63,26 +64,9 @@
   </mat-tab>
 
   <mat-tab label="Overview">
-    <div id="canvas-wrapper">
-      <div #canvas>
-        <!-- (wheel)="onCanvasZoom($event)" [ngStyle]="{ transform: 'scale(' + zoomScale + ')' }" -->
-        <svg viewBox="-1 -1 102 52" width="102px" height="52px">
-          <path d=" M 0,0 C 50,0  50,50  100,50 " stroke="black" fill="none" />
-        </svg>
-    
-        <dialogue-node
-          [zoomScale]="zoomScale"
-          (dragStart)="pausePanzoom()"
-          (dragEnd)="resumePanzoom()"
-        ></dialogue-node>
-    
-        <dialogue-node
-          [zoomScale]="zoomScale"
-          (dragStart)="pausePanzoom()"
-          (dragEnd)="resumePanzoom()"
-        ></dialogue-node>
-      </div>
-    </div>
+    <ng-template matTabContent>
+      <app-node-editor [dialogue]="getDialogue()"></app-node-editor>
+    </ng-template>
   </mat-tab>
 
   <mat-tab label="preview">
@@ -106,7 +90,8 @@
                 <input matInput>
               </mat-form-field>
 
-              <button mat-raised-button color="primary" (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
+              <button mat-raised-button color="primary"
+                (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
             </div>
 
             <div *ngIf="getDialogueItemById(preview).type == 'multi'">
@@ -115,7 +100,8 @@
               </mat-checkbox>
               <br><br>
 
-              <button mat-raised-button color="primary" (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
+              <button mat-raised-button color="primary"
+                (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
             </div>
           </mat-card>
 

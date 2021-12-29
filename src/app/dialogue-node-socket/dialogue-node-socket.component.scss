@@ -1,0 +1,13 @@
+:host {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 12px;
+    border-radius: 12px;
+    border: 2px solid #3F51B5;
+    background: #8494ED;
+    cursor: pointer;
+  
+    &:hover {
+      border: 2px solid #fff;
+    }
+}

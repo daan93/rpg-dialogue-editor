@@ -1,0 +1,36 @@
+.example-box {
+  width: 200px;
+  color: rgba(0, 0, 0, 0.87);
+  display: block;
+  outline: 2px solid transparent;
+  background-color: rgba(256, 256, 256, 0.8);
+  border-radius: 4px;
+  position: relative;
+  z-index: 1;
+  user-select: none;
+
+  &:hover { 
+    outline-color: #8494ED;
+  }
+
+  &:active {
+    outline-color: #3F51B5;
+  }
+}
+
+ul {
+  display: block;
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+li,
+.question {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+}
+.question {
+  border-bottom: 1px solid #E0E0E0;
+}
