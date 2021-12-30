@@ -1,9 +1,7 @@
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { Component, Input, Output, EventEmitter, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { Point, DragRef, CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { DialogueNodeSocketComponent } from '../dialogue-node-socket/dialogue-node-socket.component';
-import { Socket } from '../dialogue-node-socket/dialogue-node-socket.component';
 
 /**
  * @title Basic Drag&Drop
@@ -15,16 +13,11 @@ import { Socket } from '../dialogue-node-socket/dialogue-node-socket.component';
 })
 export class DialogueNodeComponent implements OnInit {
   @Input() zoomScale = 1;
-  _pos = {x: 0, y: 0 };
-  @Input() 
-  get pos() { 
-    return this._pos
-  };
-  set pos(pos: any) {
-    this._pos = this.draggedPos = pos;
-    console.log('updated node pos');
-  }
   @Input() item: any = {};
+
+  pos = {x: 0, y: 0 };
+  draggedPos = { x: 0, y: 0 };
+  dragDisabled = false;
 
   @Output() dragStart = new EventEmitter<any>();
   @Output() dragEnd = new EventEmitter<any>();
@@ -32,9 +25,13 @@ export class DialogueNodeComponent implements OnInit {
   @Output() socketUp = new EventEmitter<any>();
   @Output() positionsUpdated = new EventEmitter<any>();
 
-  draggedPos = { x: 0, y: 0 };
-  uid!: number;
-  dragDisabled = false;
+  ngOnInit() {
+    this.pos = {
+      x: this.item.editor.x,
+      y: this.item.editor.y,
+    }  
+    this.draggedPos = { ...this.pos }
+  }
 
   get socketPosition() {
     return (uid: number) => {
@@ -48,10 +45,6 @@ export class DialogueNodeComponent implements OnInit {
   }
 
   @ViewChildren(DialogueNodeSocketComponent) sockets!: QueryList<DialogueNodeSocketComponent>;
-
-  ngOnInit() {
-    this.uid = this.item.uid;
-  }
 
   InputSocketDown(uid: string) {
     this.dragDisabled = true;
@@ -123,7 +116,12 @@ export class DialogueNodeComponent implements OnInit {
 
     const cdkDrag = $event.source as CdkDrag;
     cdkDrag.reset();
+    cdkDrag._dragRef.setFreeDragPosition(this.pos);
 
-    this.dragEnd.emit();
+    this.dragEnd.emit({
+      item: this.item.uid,
+      x: this.pos.x,
+      y: this.pos.y
+    });
   }
 }

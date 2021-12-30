@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, Chan
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import * as uuid from 'uuid';
-import panzoom from 'panzoom';
 import { PanZoom } from 'panzoom';
 
 import { Socket } from './dialogue-node-socket/dialogue-node-socket.component';
@@ -36,7 +35,7 @@ export class AppComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.fromJSON('{"name":"Vegetarian","key":"vegetarian","start":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","dialogue":[{"uid":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","npc":"Are you a vegetarian?","type":"single","followUp":"","responses":[{"uid":"5e360956-7a7f-47ed-9b39-589f0bf72e4b","response":"Yes","followUp":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf"},{"uid":"3d34c343-66a6-4620-9d89-0b996fb25438","response":"No","followUp":"8221ea46-03e1-4206-a3f6-4d399d4292bc"}]},{"uid":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf","npc":"What is your favorite vegetarian food?","type":"single","followUp":"","responses":[{"uid":"0a92a48b-0407-435a-9ef7-ce1fc0c54427","response":"Salad","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"553b0727-1f41-4a08-8a8a-e3e8f7404d9c","response":"Soup","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}]},{"uid":"8221ea46-03e1-4206-a3f6-4d399d4292bc","npc":"What is your favorite food?","type":"single","followUp":"","responses":[{"uid":"61177e3f-b6a8-4e56-b869-1f9d3819ae1b","response":"Burger","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"5748ad93-e2f5-4ef3-a3d6-84b8772d61e6","response":"Steak","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"e5738c09-1ad0-4c9a-be4a-4c565428eaab","response":"Ribs","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}]},{"uid":"ca4509f5-019c-456f-a314-bac19573f87e","npc":"Thank you!","type":"single","followUp":"","responses":[]}]}')
+    this.fromJSON('{"name":"Vegetarian","key":"vegetarian","start":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","dialogue":[{"uid":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","npc":"Are you a vegetarian?","type":"single","followUp":"","responses":[{"uid":"5e360956-7a7f-47ed-9b39-589f0bf72e4b","response":"Yes","followUp":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf"},{"uid":"3d34c343-66a6-4620-9d89-0b996fb25438","response":"No","followUp":"8221ea46-03e1-4206-a3f6-4d399d4292bc"}],"editor":{"x":129,"y":145}},{"uid":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf","npc":"What is your favorite vegetarian food?","type":"single","followUp":"","responses":[{"uid":"0a92a48b-0407-435a-9ef7-ce1fc0c54427","response":"Salad","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"553b0727-1f41-4a08-8a8a-e3e8f7404d9c","response":"Soup","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}],"editor":{"x":435,"y":93}},{"uid":"8221ea46-03e1-4206-a3f6-4d399d4292bc","npc":"What is your favorite food?","type":"single","followUp":"","responses":[{"uid":"61177e3f-b6a8-4e56-b869-1f9d3819ae1b","response":"Burger","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"5748ad93-e2f5-4ef3-a3d6-84b8772d61e6","response":"Steak","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"e5738c09-1ad0-4c9a-be4a-4c565428eaab","response":"Ribs","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}],"editor":{"x":397,"y":342}},{"uid":"ca4509f5-019c-456f-a314-bac19573f87e","npc":"Thank you!","type":"single","followUp":"","responses":[],"editor":{"x":721,"y":280}}]}')
 
     this.form.get('start')?.valueChanges.subscribe(start => {
       this.preview = start;
@@ -55,6 +54,11 @@ export class AppComponent implements OnInit {
     const responses = item.get('responses') as FormArray;
     const response = responses!.at(responses.value.map((p: any) => ({ ...p, index: responses.value.indexOf(p) })).findIndex((x: any) => x.uid === event.response));
     response.patchValue({'followUp': event.followUp});
+  }
+
+  onSetNodePosition(event: any) {
+    const item = this.getDialogue().at(this.getDialogue().value.map((p: any) => ({ ...p, index: this.getDialogue().value.indexOf(p) })).findIndex((x: any) => x.uid === event.item));
+    (item.get('editor') as FormGroup).patchValue({x: event.x, y: event.y});
   }
 
   onSelectedTabChange(event: MatTabChangeEvent) {
@@ -79,7 +83,11 @@ export class AppComponent implements OnInit {
       npc: '',
       type: 'single',
       followUp: '',
-      responses: new FormArray([])
+      responses: new FormArray([]),
+      editor: this.formBuilder.group({
+        x: 0,
+        y: 0,
+      })
     });
   }
 
@@ -128,7 +136,11 @@ export class AppComponent implements OnInit {
           npc: dialogueItem.npc ? dialogueItem.npc : '',
           type: dialogueItem.type ? dialogueItem.type : 'single',
           followUp: dialogueItem.followUp ? dialogueItem.followUp : '',
-          responses: new FormArray([])
+          responses: new FormArray([]),
+          editor: this.formBuilder.group({
+            x: 0,
+            y: 0,
+          })
         });
 
         if (dialogueItem.responses) {
@@ -138,6 +150,13 @@ export class AppComponent implements OnInit {
               response: responseItem.response ? responseItem.response : '',
               followUp: responseItem.followUp ? responseItem.followUp : '',
             }))
+          })
+        }
+
+        if(dialogueItem.editor) {
+          (dialogueItemFormGroup.get('editor') as FormGroup )?.patchValue({
+            x: dialogueItem.editor.x ? dialogueItem.editor.x : 0,
+            y: dialogueItem.editor.y ? dialogueItem.editor.y : 0,
           })
         }
 

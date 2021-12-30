@@ -24,6 +24,7 @@ export class NodeEditorComponent implements OnInit {
   mousePosition: any = {x: 0, y: 0};
 
   @Output() setResponseFollowUp = new EventEmitter<any>();
+  @Output() setNodePosition = new EventEmitter<any>();
 
   @ViewChild('canvas') canvasElement!: ElementRef;
 
@@ -68,7 +69,6 @@ export class NodeEditorComponent implements OnInit {
   }
 
   onSocketUp(event: any) {
-    console.log(event);
     if (event.type === 'input' && this.addNewConnection.type === 'output') {
       this.setResponseFollowUp.emit({
         item: this.addNewConnection.itemUID, 
@@ -86,7 +86,7 @@ export class NodeEditorComponent implements OnInit {
   }
 
   getNewResponsePath() {
-    const dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.uid === this.addNewConnection.itemUID);
+    const dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === this.addNewConnection.itemUID);
     const socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === this.addNewConnection.socketUID);
     const nativeElementRect: ClientRect = this.nativeElement.getBoundingClientRect();
 
@@ -117,6 +117,11 @@ export class NodeEditorComponent implements OnInit {
     return this.dialogue.value.map((p: any) => ({ ...p, index: this.dialogue.value.indexOf(p) })).find((x: any) => x.uid === id);
   }
 
+  nodeDragEnd(event: any) {
+    this.setNodePosition.emit(event);
+    this.resumePanzoom();
+  }
+
   pausePanzoom() {
     this.panzoomCanvas.pause();
   }
@@ -132,10 +137,10 @@ export class NodeEditorComponent implements OnInit {
   getResponsePath(item: any, response: any) {
     if (!this.dialogueNodes) return;
 
-    let dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.uid === item.controls['uid'].value);
+    let dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === item.controls['uid'].value);
     let socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.uid);
 
-    let followUpDialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.uid === response.followUp);
+    let followUpDialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === response.followUp);
     let followUpsocket = followUpDialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: followUpDialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.followUp);
 
     let points = {
@@ -154,9 +159,4 @@ export class NodeEditorComponent implements OnInit {
       ${points.end.x - 50},${points.end.y}  
       ${points.end.x},${points.end.y}`
   }
-
-  updateSockets(event: any) {
-    console.log(event);
-  }
-
 }

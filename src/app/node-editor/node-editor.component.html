@@ -12,7 +12,7 @@
         </svg>
 
         <app-dialogue-node [zoomScale]="panzoomTransform.scale" [item]="getDialogueItemById(getDialogUID(item))"
-          (dragStart)="pausePanzoom()" (dragEnd)="resumePanzoom()" (socketDown)="onSocketDown($event)" (socketUp)="onSocketUp($event)">
+          (dragStart)="pausePanzoom()" (dragEnd)="nodeDragEnd($event)" (socketDown)="onSocketDown($event)" (socketUp)="onSocketUp($event)">
         </app-dialogue-node>
       </ng-container>
     </div>
