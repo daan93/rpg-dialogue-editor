@@ -87,7 +87,7 @@ export class NodeEditorComponent implements OnInit {
 
   getNewResponsePath() {
     const dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === this.addNewConnection.itemUID);
-    const socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === this.addNewConnection.socketUID);
+    const socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === this.addNewConnection.socketUID && x.type === this.addNewConnection.type);
     const nativeElementRect: ClientRect = this.nativeElement.getBoundingClientRect();
 
     const points = {
@@ -131,6 +131,8 @@ export class NodeEditorComponent implements OnInit {
   }
 
   getConnections(uid: string) {
+    const item = this.getDialogueItemById(uid);
+    if (item.type !== 'single' && item.followUp !== '') return [item];
     return this.getDialogueItemById(uid).responses.filter((response: any) => response.followUp !== '');
   }
 
@@ -138,7 +140,7 @@ export class NodeEditorComponent implements OnInit {
     if (!this.dialogueNodes) return;
 
     let dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === item.controls['uid'].value);
-    let socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.uid);
+    let socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.uid && x.type === 'output');
 
     let followUpDialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === response.followUp);
     let followUpsocket = followUpDialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: followUpDialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.followUp);

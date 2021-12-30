@@ -25,6 +25,8 @@ export class DialogueNodeComponent implements OnInit {
   @Output() socketUp = new EventEmitter<any>();
   @Output() positionsUpdated = new EventEmitter<any>();
 
+  @ViewChildren(DialogueNodeSocketComponent) sockets!: QueryList<DialogueNodeSocketComponent>;
+
   ngOnInit() {
     this.pos = {
       x: this.item.editor.x,
@@ -32,19 +34,6 @@ export class DialogueNodeComponent implements OnInit {
     }  
     this.draggedPos = { ...this.pos }
   }
-
-  get socketPosition() {
-    return (uid: number) => {
-      let socket = this.sockets.toArray().map((p: any) => ({ ...p, index: this.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === uid);
-
-      return {
-        x: this.pos.x + socket.nativeElement.offsetTop,
-        y: this.pos.y + socket.nativeElement.offsetLeft,
-      }
-    }
-  }
-
-  @ViewChildren(DialogueNodeSocketComponent) sockets!: QueryList<DialogueNodeSocketComponent>;
 
   InputSocketDown(uid: string) {
     this.dragDisabled = true;

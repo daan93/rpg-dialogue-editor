@@ -13,6 +13,7 @@ export interface Socket {
 })
 export class DialogueNodeSocketComponent implements OnInit {
   @Input() uid: number = 0;
+  @Input() type: 'input' | 'output' = 'input';
   nativeElement;
 
   constructor(element: ElementRef) { 
