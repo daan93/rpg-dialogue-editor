@@ -15,6 +15,8 @@ import { DialogueNodeComponent } from './../dialogue-node/dialogue-node';
 })
 export class NodeEditorComponent implements OnInit {
   @Input() dialogue!: FormArray;
+  @Input() start!: string;
+  @Input() editorData!: any;
 
   nativeElement;
   panzoomTransform = {scale: 1, x: 0, y: 0};
@@ -139,7 +141,7 @@ export class NodeEditorComponent implements OnInit {
   getResponsePath(item: any, response: any) {
     if (!this.dialogueNodes) return;
 
-    let dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === item.controls['uid'].value);
+    let dialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === item);
     let socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.uid && x.type === 'output');
 
     let followUpDialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === response.followUp);

@@ -1,53 +1,43 @@
-<div
-  class="example-box"
-  cdkDrag
-  [cdkDragDisabled]="dragDisabled"
-  (cdkDragStarted)="startDragging($event)"
-  (cdkDragMoved)="dragging($event)"
-  (cdkDragEnded)="endDragging($event)"
-  [cdkDragConstrainPosition]="dragConstrainPoint"
-  [cdkDragFreeDragPosition]="pos"
->
-  <div class="question">
-    <app-dialogue-node-socket
-      [uid]="item.uid"
-      type="input"
-      (pointerdown)="InputSocketDown(item.uid)"
-      (pointerup)="InputSocketUp(item.uid)"
-    ></app-dialogue-node-socket>
+<div class="example-box" cdkDrag [cdkDragDisabled]="dragDisabled" (cdkDragStarted)="startDragging($event)"
+  (cdkDragMoved)="dragging($event)" (cdkDragEnded)="endDragging($event)" [cdkDragConstrainPosition]="dragConstrainPoint"
+  [cdkDragFreeDragPosition]="pos">
+
+
+  <div class="question" *ngIf="item.uid !== 'start'">
+    <app-dialogue-node-socket [uid]="item.uid" type="input" (pointerdown)="InputSocketDown(item.uid)"
+      (pointerup)="InputSocketUp(item.uid)"></app-dialogue-node-socket>
     <span>{{ item.npc }}</span>
   </div>
+
+  <ul *ngIf="item.uid === 'start'">
+    <li>
+      <span>Start</span>
+      <app-dialogue-node-socket [uid]="item.uid" type="output" (pointerdown)="OutputSocketDown(item.uid)"
+        (pointerup)="OutputSocketUp(item.uid)"></app-dialogue-node-socket>
+    </li>
+  </ul>
+
   <ul *ngIf="item.type === 'open'">
     <li>
       <span>Open answer</span>
-      <app-dialogue-node-socket
-        [uid]="item.uid"
-        type="output"
-        (pointerdown)="OutputSocketDown(item.uid)"
-        (pointerup)="OutputSocketUp(item.uid)"
-      ></app-dialogue-node-socket>
+      <app-dialogue-node-socket [uid]="item.uid" type="output" (pointerdown)="OutputSocketDown(item.uid)"
+        (pointerup)="OutputSocketUp(item.uid)"></app-dialogue-node-socket>
     </li>
   </ul>
+
   <ul *ngIf="item.type === 'single'">
     <li *ngFor="let response of item.responses">
       <span>{{ response.response }}</span>
-      <app-dialogue-node-socket
-        [uid]="response.uid"
-        type="output"
-        (pointerdown)="OutputSocketDown(response.uid)"
-        (pointerup)="OutputSocketUp(response.uid)"
-      ></app-dialogue-node-socket>
+      <app-dialogue-node-socket [uid]="response.uid" type="output" (pointerdown)="OutputSocketDown(response.uid)"
+        (pointerup)="OutputSocketUp(response.uid)"></app-dialogue-node-socket>
     </li>
   </ul>
+
   <ul *ngIf="item.type === 'multi'">
     <li>
       <span>Multiple answers</span>
-      <app-dialogue-node-socket
-        [uid]="item.uid"
-        type="output"
-        (pointerdown)="OutputSocketDown(item.uid)"
-        (pointerup)="OutputSocketUp(item.uid)"
-      ></app-dialogue-node-socket>
+      <app-dialogue-node-socket [uid]="item.uid" type="output" (pointerdown)="OutputSocketDown(item.uid)"
+        (pointerup)="OutputSocketUp(item.uid)"></app-dialogue-node-socket>
     </li>
   </ul>
 </div>

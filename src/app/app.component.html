@@ -65,7 +65,8 @@
 
   <mat-tab label="Overview">
     <ng-template matTabContent>
-      <app-node-editor [dialogue]="getDialogue()" (setResponseFollowUp)="onSetResponseFollowUp($event)"
+      <app-node-editor [dialogue]="getDialogue()" [start]="form.controls['start'].value"
+        [editorData]="form.controls['editor'].value" (setResponseFollowUp)="onSetResponseFollowUp($event)"
         (setNodePosition)="onSetNodePosition($event)"></app-node-editor>
     </ng-template>
   </mat-tab>
