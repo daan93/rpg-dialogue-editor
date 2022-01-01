@@ -1,7 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, ViewChild, ElementRef, HostListener, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
-import { MatTabChangeEvent } from '@angular/material/tabs';
-import * as uuid from 'uuid';
+import { FormArray } from '@angular/forms';
 import panzoom from 'panzoom';
 import { PanZoom } from 'panzoom';
 
@@ -19,46 +17,53 @@ export class NodeEditorComponent implements OnInit {
   @Input() editorData!: any;
 
   nativeElement;
-  panzoomTransform = {scale: 1, x: 0, y: 0};
+  panzoomTransform = { scale: 1, x: 0, y: 0 };
   panzoomCanvas!: PanZoom;
   sockets: Socket[] = [];
   addNewConnection: any = null;
-  mousePosition: any = {x: 0, y: 0};
+  mousePosition: any = { x: 0, y: 0 };
 
   @Output() setResponseFollowUp = new EventEmitter<any>();
   @Output() setNodePosition = new EventEmitter<any>();
+  @Output() setViewPosition = new EventEmitter<any>();
 
   @ViewChild('canvas') canvasElement!: ElementRef;
 
   @ViewChildren(DialogueNodeComponent) dialogueNodes!: QueryList<DialogueNodeComponent>;
 
-  @HostListener('mousemove', ['$event']) 
+  @HostListener('mousemove', ['$event'])
   onMouseMove(e: MouseEvent) {
-    this.mousePosition = {x: e.x, y: e.y}
+    this.mousePosition = { x: e.x, y: e.y }
   }
 
-  @HostListener('mouseup', ['$event']) 
+  @HostListener('mouseup', ['$event'])
   onMouseUp(e: MouseEvent) {
     if (this.addNewConnection) this.addNewConnection = null;
-    this.dialogueNodes.forEach((node: DialogueNodeComponent) => { node.dragDisabled = false});
+    this.dialogueNodes.forEach((node: DialogueNodeComponent) => { node.dragDisabled = false });
   }
 
   constructor(
     private cd: ChangeDetectorRef,
-    private element: ElementRef) { 
+    private element: ElementRef) {
     this.nativeElement = element.nativeElement;
   }
 
   ngAfterViewInit() {
+    const initTransform = this.editorData.viewPos;
+
     this.panzoomCanvas = panzoom(this.canvasElement.nativeElement, {
       maxZoom: 1,
       minZoom: 0.1,
+      initialZoom: initTransform.scale
     });
+
+    this.panzoomCanvas.moveTo(initTransform.x, initTransform.y);
 
     this.panzoomCanvas.on('transform', (e) => {
       this.panzoomTransform = this.panzoomCanvas.getTransform();
+      this.setViewPosition.emit(this.panzoomTransform);
     });
-    
+
     this.cd.detectChanges();
   }
 
@@ -73,15 +78,17 @@ export class NodeEditorComponent implements OnInit {
   onSocketUp(event: any) {
     if (event.type === 'input' && this.addNewConnection.type === 'output') {
       this.setResponseFollowUp.emit({
-        item: this.addNewConnection.itemUID, 
-        response: this.addNewConnection.socketUID, 
-        followUp: event.itemUID });
+        item: this.addNewConnection.itemUID,
+        response: this.addNewConnection.socketUID,
+        followUp: event.itemUID
+      });
     }
     else if (event.type === 'output' && this.addNewConnection.type === 'input') {
       this.setResponseFollowUp.emit({
-        item: event.itemUID, 
-        response: event.socketUID, 
-        followUp: this.addNewConnection.itemUID });
+        item: event.itemUID,
+        response: event.socketUID,
+        followUp: this.addNewConnection.itemUID
+      });
     }
     this.addNewConnection = null;
     this.resumePanzoom();

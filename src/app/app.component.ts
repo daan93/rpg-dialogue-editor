@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
     dialogue: new FormArray([]),
     editor: this.formBuilder.group({
       viewPos: this.formBuilder.group({
+        scale: 1,
         x: 0,
         y: 0,
       }),
@@ -45,7 +46,7 @@ export class AppComponent implements OnInit {
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.fromJSON('{"name":"Vegetarian","key":"vegetarian","start":"f7f814d0-91d2-4a41-a179-7478c96153b7","dialogue":[{"uid":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","npc":"Are you a vegetarian?","type":"single","followUp":"","responses":[{"uid":"5e360956-7a7f-47ed-9b39-589f0bf72e4b","response":"Yes","followUp":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf"},{"uid":"3d34c343-66a6-4620-9d89-0b996fb25438","response":"No","followUp":"8221ea46-03e1-4206-a3f6-4d399d4292bc"}],"editor":{"x":129,"y":145}},{"uid":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf","npc":"What is your favorite vegetarian food?","type":"single","followUp":"","responses":[{"uid":"0a92a48b-0407-435a-9ef7-ce1fc0c54427","response":"Salad","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"553b0727-1f41-4a08-8a8a-e3e8f7404d9c","response":"Soup","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}],"editor":{"x":460,"y":45}},{"uid":"8221ea46-03e1-4206-a3f6-4d399d4292bc","npc":"What is your favorite food?","type":"single","followUp":"","responses":[{"uid":"61177e3f-b6a8-4e56-b869-1f9d3819ae1b","response":"Burger","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"5748ad93-e2f5-4ef3-a3d6-84b8772d61e6","response":"Steak","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"e5738c09-1ad0-4c9a-be4a-4c565428eaab","response":"Ribs","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}],"editor":{"x":397,"y":342}},{"uid":"ca4509f5-019c-456f-a314-bac19573f87e","npc":"Thank you!","type":"single","followUp":"","responses":[],"editor":{"x":721,"y":280}},{"uid":"f7f814d0-91d2-4a41-a179-7478c96153b7","npc":"What is your name?","type":"open","followUp":"3a0ae833-933b-458c-957f-40ab9aaab524","responses":[],"editor":{"x":-410,"y":163}},{"uid":"3a0ae833-933b-458c-957f-40ab9aaab524","npc":"Do you have any of the following food allergies?","type":"multi","followUp":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","responses":[],"editor":{"x":-152,"y":160}}],"editor":{"viewPos":{"x":null,"y":null},"startPos":{"x":-709,"y":161}}}')
+    this.fromJSON('{"name":"Vegetarian","key":"vegetarian","start":"f7f814d0-91d2-4a41-a179-7478c96153b7","dialogue":[{"uid":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","npc":"Are you a vegetarian?","type":"single","followUp":"","responses":[{"uid":"5e360956-7a7f-47ed-9b39-589f0bf72e4b","response":"Yes","followUp":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf"},{"uid":"3d34c343-66a6-4620-9d89-0b996fb25438","response":"No","followUp":"8221ea46-03e1-4206-a3f6-4d399d4292bc"}],"editor":{"x":129,"y":145}},{"uid":"3cd2f0fc-e3e2-47f8-b704-a0c65fd511cf","npc":"What is your favorite vegetarian food?","type":"single","followUp":"","responses":[{"uid":"0a92a48b-0407-435a-9ef7-ce1fc0c54427","response":"Salad","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"553b0727-1f41-4a08-8a8a-e3e8f7404d9c","response":"Soup","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}],"editor":{"x":460,"y":45}},{"uid":"8221ea46-03e1-4206-a3f6-4d399d4292bc","npc":"What is your favorite food?","type":"single","followUp":"","responses":[{"uid":"61177e3f-b6a8-4e56-b869-1f9d3819ae1b","response":"Burger","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"5748ad93-e2f5-4ef3-a3d6-84b8772d61e6","response":"Steak","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"},{"uid":"e5738c09-1ad0-4c9a-be4a-4c565428eaab","response":"Ribs","followUp":"ca4509f5-019c-456f-a314-bac19573f87e"}],"editor":{"x":397,"y":342}},{"uid":"ca4509f5-019c-456f-a314-bac19573f87e","npc":"Thank you!","type":"single","followUp":"","responses":[],"editor":{"x":721,"y":280}},{"uid":"f7f814d0-91d2-4a41-a179-7478c96153b7","npc":"What is your name?","type":"open","followUp":"3a0ae833-933b-458c-957f-40ab9aaab524","responses":[],"editor":{"x":-410,"y":163}},{"uid":"3a0ae833-933b-458c-957f-40ab9aaab524","npc":"Do you have any of the following food allergies?","type":"multi","followUp":"08ac47fb-c176-4a10-a875-6cd1583ccd7b","responses":[],"editor":{"x":-152,"y":160}}],"editor":{"viewPos":{"scale":0.8223134463929247,"x":655.6373272678093,"y":136.13038361291848},"startPos":{"x":-709,"y":161}}}')
 
     this.form.get('start')?.valueChanges.subscribe(start => {
       this.preview = start;
@@ -86,8 +87,8 @@ export class AppComponent implements OnInit {
     }
   }
 
-  onSelectedTabChange(event: MatTabChangeEvent) {
-    if (event.index === 2) { }
+  onSetViewPosition(event: any) {
+     this.form.get('editor')?.get('viewPos')?.patchValue(event);
   }
 
   getDialogUID(item: any) {
@@ -153,7 +154,6 @@ export class AppComponent implements OnInit {
     if (data.key) this.form.get('key')?.setValue(data.key);
     if (data.start) this.form.get('start')?.setValue(data.start);
 
-    if (data.editor) console.log(data.editor.startPos);
     if (data.editor) this.form.get('editor')?.setValue(
       {
         viewPos: data.editor.viewPos,

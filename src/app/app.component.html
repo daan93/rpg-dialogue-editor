@@ -2,7 +2,7 @@
   <span>RPG Dialogue Editor</span>
 </mat-toolbar>
 
-<mat-tab-group backgroundColor="primary" (selectedTabChange)="onSelectedTabChange($event)">
+<mat-tab-group backgroundColor="primary">
   <mat-tab label="Dialogue">
     <div class="mdc-layout-grid">
       <div class="mdc-layout-grid__inner">
@@ -67,7 +67,7 @@
     <ng-template matTabContent>
       <app-node-editor [dialogue]="getDialogue()" [start]="form.controls['start'].value"
         [editorData]="form.controls['editor'].value" (setResponseFollowUp)="onSetResponseFollowUp($event)"
-        (setNodePosition)="onSetNodePosition($event)"></app-node-editor>
+        (setNodePosition)="onSetNodePosition($event)" (setViewPosition)="onSetViewPosition($event)"></app-node-editor>
     </ng-template>
   </mat-tab>
 
