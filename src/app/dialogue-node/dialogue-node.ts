@@ -15,7 +15,7 @@ export class DialogueNodeComponent implements OnInit {
   @Input() zoomScale = 1;
   @Input() item: any = {};
 
-  pos = {x: 0, y: 0 };
+  pos = { x: 0, y: 0 };
   draggedPos = { x: 0, y: 0 };
   dragDisabled = false;
 
@@ -31,44 +31,49 @@ export class DialogueNodeComponent implements OnInit {
     this.pos = {
       x: this.item.editor.x,
       y: this.item.editor.y,
-    }  
+    }
     this.draggedPos = { ...this.pos }
   }
 
   InputSocketDown(uid: string) {
     this.dragDisabled = true;
-    this.socketDown.emit({type: 'input', itemUID: this.item.uid, socketUID: uid});
+    this.socketDown.emit({ type: 'input', itemUID: this.item.uid, socketUID: uid });
   }
 
   InputSocketUp(uid: string) {
     this.dragDisabled = false;
-    this.socketUp.emit({type: 'input', itemUID: this.item.uid, socketUID: uid});
+    this.socketUp.emit({ type: 'input', itemUID: this.item.uid, socketUID: uid });
   }
 
   OutputSocketDown(uid: string) {
     this.dragDisabled = true;
-    this.socketDown.emit({type: 'output', itemUID: this.item.uid, socketUID: uid});
+    this.socketDown.emit({ type: 'output', itemUID: this.item.uid, socketUID: uid });
   }
 
   OutputSocketUp(uid: string) {
     this.dragDisabled = false;
-    this.socketUp.emit({type: 'output', itemUID: this.item.uid, socketUID: uid});
+    this.socketUp.emit({ type: 'output', itemUID: this.item.uid, socketUID: uid });
   }
 
   dragConstrainPoint = (point: Point, dragRef: DragRef) => {
-    let zoomMoveXDifference = 0;
-    let zoomMoveYDifference = 0;
+    let initialPosX = 0;
+    let initialPosY = 0;
 
-    if (this.zoomScale != 1) {
-      zoomMoveXDifference =
-        (1 - this.zoomScale) * dragRef.getFreeDragPosition().x;
-      zoomMoveYDifference =
-        (1 - this.zoomScale) * dragRef.getFreeDragPosition().y;
+    if (dragRef.getFreeDragPosition().x !== 0 && dragRef.getFreeDragPosition().y !== 0) {
+      initialPosX = this.pos.x;
+      initialPosY = this.pos.y;
     }
+
+    let zoomMoveXDifference =
+      (1 - this.zoomScale) * dragRef.getFreeDragPosition().x
+      - (1 - this.zoomScale) * initialPosX;
+    let zoomMoveYDifference =
+      (1 - this.zoomScale) * dragRef.getFreeDragPosition().y
+      - (1 - this.zoomScale) * initialPosY;
 
     return {
       x: point.x + zoomMoveXDifference,
-      y: point.y + zoomMoveYDifference,
+      y: point.y + zoomMoveYDifference
     };
   };
 
@@ -102,11 +107,7 @@ export class DialogueNodeComponent implements OnInit {
     this.pos.y =
       (elementMovingRect.top - elementMovingParentElementRect.top) /
       this.zoomScale;
-
-    const cdkDrag = $event.source as CdkDrag;
-    cdkDrag.reset();
-    cdkDrag._dragRef.setFreeDragPosition(this.pos);
-
+      
     this.dragEnd.emit({
       item: this.item.uid,
       x: this.pos.x,
