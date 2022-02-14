@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
     }
     else {
       const item = this.getDialogue().at(this.getDialogue().value.map((p: any) => ({ ...p, index: this.getDialogue().value.indexOf(p) })).findIndex((x: any) => x.uid === event.item));
-      if (event.item = event.response) {
+      if (event.item === event.response) {
         item.patchValue({ 'followUp': event.followUp });
       }
       else {
