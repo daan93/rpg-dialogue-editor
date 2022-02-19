@@ -152,22 +152,25 @@ export class NodeEditorComponent implements OnInit {
     let socket = dialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: dialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.uid && x.type === 'output');
 
     let followUpDialogueNode = this.dialogueNodes.toArray().map((p: any) => ({ ...p, index: this.dialogueNodes.toArray().indexOf(p) })).find((x: any) => x.item.uid === response.followUp);
-    let followUpsocket = followUpDialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: followUpDialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.followUp);
+    if (followUpDialogueNode) {
+      let followUpsocket = followUpDialogueNode.sockets.toArray().map((p: any) => ({ ...p, index: followUpDialogueNode.sockets.toArray().indexOf(p) })).find((x: any) => x.uid === response.followUp);
 
-    let points = {
-      start: {
-        x: dialogueNode.draggedPos.x + socket.nativeElement.offsetLeft + 8,
-        y: dialogueNode.draggedPos.y + socket.nativeElement.offsetTop + 8,
-      },
-      end: {
-        x: followUpDialogueNode.draggedPos.x + followUpsocket.nativeElement.offsetLeft + 8,
-        y: followUpDialogueNode.draggedPos.y + followUpsocket.nativeElement.offsetTop + 8,
+      let points = {
+        start: {
+          x: dialogueNode.draggedPos.x + socket.nativeElement.offsetLeft + 8,
+          y: dialogueNode.draggedPos.y + socket.nativeElement.offsetTop + 8,
+        },
+        end: {
+          x: followUpDialogueNode.draggedPos.x + followUpsocket.nativeElement.offsetLeft + 8,
+          y: followUpDialogueNode.draggedPos.y + followUpsocket.nativeElement.offsetTop + 8,
+        }
       }
-    }
 
-    return `M ${points.start.x},${points.start.y} 
-    C ${points.start.x + 50},${points.start.y}  
-      ${points.end.x - 50},${points.end.y}  
-      ${points.end.x},${points.end.y}`
+      return `M ${points.start.x},${points.start.y} 
+              C ${points.start.x + 50},${points.start.y}  
+                ${points.end.x - 50},${points.end.y}  
+                ${points.end.x},${points.end.y}`
+    }
+    return null;
   }
 }
