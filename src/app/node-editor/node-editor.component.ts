@@ -22,6 +22,7 @@ export class NodeEditorComponent implements OnInit {
   sockets: Socket[] = [];
   addNewConnection: any = null;
   mousePosition: any = { x: 0, y: 0 };
+  dragging = false;
 
   @Output() setResponseFollowUp = new EventEmitter<any>();
   @Output() setNodePosition = new EventEmitter<any>();
@@ -71,11 +72,13 @@ export class NodeEditorComponent implements OnInit {
   }
 
   onSocketDown(event: any) {
+    this.dragging = true;
     this.addNewConnection = event;
     this.pausePanzoom();
   }
 
   onSocketUp(event: any) {
+    this.dragging = false;
     if (event.type === 'input' && this.addNewConnection.type === 'output') {
       this.setResponseFollowUp.emit({
         item: this.addNewConnection.itemUID,

@@ -2,6 +2,10 @@
     width: 100%;
     height: calc(100vh - 112px);
     overflow: hidden;
+
+    &.dragging {
+      cursor: grabbing;
+    }
   
     > div {
       display: flex;

@@ -1,4 +1,4 @@
-<div id="canvas-wrapper">
+<div id="canvas-wrapper" [class.dragging]="dragging">
   <div #canvas>
     <svg viewBox="-1 -1 102 52" width="102px" height="52px" *ngIf="addNewConnection">
       <path [attr.d]="getNewResponsePath()" stroke="#3F51B5" stroke-width="3" fill="none" />
