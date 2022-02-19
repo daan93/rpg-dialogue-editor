@@ -89,7 +89,7 @@
             <div *ngIf="getDialogueItemById(preview).type == 'open'">
               <mat-form-field appearance="outline">
                 <mat-label>Answer</mat-label>
-                <input matInput>
+                <input matInput [formControl]="previewInput">
               </mat-form-field>
 
               <button mat-raised-button color="primary"

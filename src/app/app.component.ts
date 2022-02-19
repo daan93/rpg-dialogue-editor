@@ -33,6 +33,8 @@ export class AppComponent implements OnInit {
     })
   });
 
+  previewInput = new FormControl('');
+
   preview: string = '';
   zoomScale = 1;
   panzoomCanvas!: PanZoom;
@@ -130,6 +132,7 @@ export class AppComponent implements OnInit {
   }
 
   setPreview(id: string) {
+    this.previewInput.setValue('');
     this.preview = id;
   }
 
