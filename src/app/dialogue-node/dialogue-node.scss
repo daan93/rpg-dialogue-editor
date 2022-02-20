@@ -8,6 +8,7 @@
   position: relative;
   z-index: 1;
   user-select: none;
+  cursor: default;
 
   &:hover { 
     outline-color: #8494ED;

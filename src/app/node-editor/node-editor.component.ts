@@ -33,6 +33,11 @@ export class NodeEditorComponent implements OnInit {
 
   @ViewChildren(DialogueNodeComponent) dialogueNodes!: QueryList<DialogueNodeComponent>;
 
+  @HostListener('mousedown', ['$event'])
+  onMouseDown(e: MouseEvent) {
+    this.element.nativeElement.style.cursor = 'grabbing';
+  }
+
   @HostListener('mousemove', ['$event'])
   onMouseMove(e: MouseEvent) {
     this.mousePosition = { x: e.x, y: e.y }
@@ -40,7 +45,11 @@ export class NodeEditorComponent implements OnInit {
 
   @HostListener('mouseup', ['$event'])
   onMouseUp(e: MouseEvent) {
-    if (this.addNewConnection) this.addNewConnection = null;
+    this.element.nativeElement.style.cursor = 'grab';
+    if (this.addNewConnection) {
+      this.addNewConnection = null;
+      this.resumePanzoom();
+    }
     this.dialogueNodes.forEach((node: DialogueNodeComponent) => { node.dragDisabled = false });
   }
 
@@ -73,13 +82,11 @@ export class NodeEditorComponent implements OnInit {
   }
 
   onSocketDown(event: any) {
-    this.dragging = true;
     this.addNewConnection = event;
     this.pausePanzoom();
   }
 
   onSocketUp(event: any) {
-    this.dragging = false;
     if (event.type === 'input' && this.addNewConnection.type === 'output') {
       this.setResponseFollowUp.emit({
         item: this.addNewConnection.itemUID,
