@@ -1,11 +1,13 @@
-<mat-card [formGroup]="form">
+<div [formGroup]="form">
     <div>
-        {{ form.controls['uid'].value }}
-        <br><br>
+        <mat-form-field appearance="outline">
+            <mat-label>NPC Speech</mat-label>
+            <textarea matInput formControlName="npc"></textarea>
+        </mat-form-field>
     </div>
 
     <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
-        <div>
+        <div fxFlex>
             <mat-form-field appearance="outline">
                 <mat-label>Type</mat-label>
                 <mat-select formControlName="type">
@@ -19,13 +21,6 @@
                         Multi answer
                     </mat-option>
                 </mat-select>
-            </mat-form-field>
-        </div>
-
-        <div fxFlex>
-            <mat-form-field appearance="outline">
-                <mat-label>NPC Speech</mat-label>
-                <input matInput formControlName="npc">
             </mat-form-field>
         </div>
 
@@ -48,36 +43,37 @@
     </ng-container>
 
     <ng-container *ngIf="form.controls['type'].value !== 'open'">
-        <ng-container formArrayName="responses" *ngFor="let item of getResponses().controls; let i = index;">
-            <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start" [formGroupName]="i">
-                <div fxFlex>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Character Response</mat-label>
-                        <input matInput formControlName="response">
-                    </mat-form-field>
-                </div>
+        <mat-card formArrayName="responses" *ngFor="let item of getResponses().controls; let i = index;">
+            <div [formGroupName]="i">
+                <mat-form-field appearance="outline">
+                    <mat-label>Character Response</mat-label>
+                    <textarea matInput formControlName="response"></textarea>
+                </mat-form-field>
 
-                <div fxFlex *ngIf="form.controls['type'].value !== 'multi'">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Follow-up</mat-label>
-                        <mat-select formControlName="followUp">
-                            <mat-option *ngFor="let item of dialogue; let i = index;" [value]="item.controls.uid.value">
-                                {{ item.controls.npc.value }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+                <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
+                    <div fxFlex *ngIf="form.controls['type'].value !== 'multi'">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Follow-up</mat-label>
+                            <mat-select formControlName="followUp">
+                                <mat-option *ngFor="let item of dialogue; let i = index;"
+                                    [value]="item.controls.uid.value">
+                                    {{ item.controls.npc.value }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
 
-                <div style="height: 64px;" fxLayout="row" fxLayoutAlign="start center">
-                    <button mat-icon-button color="primary" (click)="addResponse(i)">
-                        <mat-icon>add_circle_outline</mat-icon>
-                    </button>
-                    <button mat-icon-button color="primary" (click)="deleteResponse(i)">
-                        <mat-icon>remove_circle_outline</mat-icon>
-                    </button>
+                    <div style="height: 64px;" fxLayout="row" fxLayoutAlign="start center">
+                        <button mat-icon-button color="primary" (click)="addResponse(i)">
+                            <mat-icon>add_circle_outline</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)="deleteResponse(i)">
+                            <mat-icon>remove_circle_outline</mat-icon>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </ng-container>
+        </mat-card>
 
         <div class="mdc-layout-grid__inner" *ngIf="getResponses().length == 0">
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
@@ -85,4 +81,4 @@
             </div>
         </div>
     </ng-container>
-</mat-card>
+</div>

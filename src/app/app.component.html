@@ -3,7 +3,7 @@
 </mat-toolbar>
 
 <mat-tab-group backgroundColor="primary">
-  <mat-tab label="Dialogue">
+  <!-- <mat-tab label="Dialogue">
     <div class="mdc-layout-grid">
       <div class="mdc-layout-grid__inner">
         <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" [formGroup]="form">
@@ -34,6 +34,64 @@
         </div>
       </div>
     </div>
+  </mat-tab> -->
+
+  <mat-tab label="Dialogue">
+    <ng-template matTabContent>
+      <div fxLayout class="wrapper">
+        <app-node-editor fxFlex="1 1 auto" [dialogue]="getDialogue()" [start]="form.controls['start'].value"
+          [editorData]="form.controls['editor'].value" (setResponseFollowUp)="onSetResponseFollowUp($event)"
+          (setNodePosition)="onSetNodePosition($event)" (setViewPosition)="onSetViewPosition($event)">
+        </app-node-editor>
+
+        <div fxFlex="1 1 33%" [fxFlex.lt-md]="'1 1 100%'" class="sidebar" [formGroup]="form">
+          <mat-card>
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name">
+            </mat-form-field>
+
+            <input type="hidden" formControlName="key">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Starting point</mat-label>
+              <mat-select formControlName="start">
+                <mat-option *ngFor="let item of getDialogue().controls; let i = index;" [value]="getDialogUID(item)">
+                  {{ getNPC(item) }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-card>
+
+          <mat-accordion>
+            <mat-expansion-panel formArrayName="dialogue" *ngFor="let item of getDialogue().controls; let i = index;">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{ getNPC(item) }}
+                </mat-panel-title>
+                <mat-panel-description>
+                  <ng-container [ngSwitch]="getType(item)">
+                    <span *ngSwitchCase="'open'">Open answer</span>
+                    <span *ngSwitchCase="'single'">Single answer</span>
+                    <span *ngSwitchCase="'multi'">Multi answer</span>
+                    <span *ngSwitchDefault></span>
+                  </ng-container>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <ng-template matExpansionPanelContent>
+                <app-dialogue-item [formGroupName]="i" [dialogue]="getDialogue().controls" (delete)="deleteDialogue(i)">
+                </app-dialogue-item>
+              </ng-template>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+      
+      <button class="add-dialogue-button" mat-fab color="primary" aria-label="Example icon button with a delete icon"
+        (click)="addDialogue()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </ng-template>
   </mat-tab>
 
   <mat-tab label="Import/Export">
@@ -61,14 +119,6 @@
         </div>
       </div>
     </div>
-  </mat-tab>
-
-  <mat-tab label="Overview">
-    <ng-template matTabContent>
-      <app-node-editor [dialogue]="getDialogue()" [start]="form.controls['start'].value"
-        [editorData]="form.controls['editor'].value" (setResponseFollowUp)="onSetResponseFollowUp($event)"
-        (setNodePosition)="onSetNodePosition($event)" (setViewPosition)="onSetViewPosition($event)"></app-node-editor>
-    </ng-template>
   </mat-tab>
 
   <mat-tab label="preview">

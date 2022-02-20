@@ -2,6 +2,7 @@
     width: 100%;
     height: calc(100vh - 112px);
     overflow: hidden;
+    background: rgba(0,0,0,.05);
 
     &.dragging {
       cursor: grabbing;

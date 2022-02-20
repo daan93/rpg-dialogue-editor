@@ -101,6 +101,10 @@ export class AppComponent implements OnInit {
     return item.controls.npc.value;
   }
 
+  getType(item: any) {
+    return item.controls.type.value;
+  }
+
   getDialogue() {
     return this.form.get('dialogue') as FormArray;
   }
