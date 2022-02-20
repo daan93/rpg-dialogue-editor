@@ -22,7 +22,7 @@
 
       <app-dialogue-node [zoomScale]="panzoomTransform.scale" [item]="getDialogueItemById(getDialogUID(item))"
         (dragStart)="pausePanzoom()" (dragEnd)="nodeDragEnd($event)" (socketDown)="onSocketDown($event)"
-        (socketUp)="onSocketUp($event)">
+        (socketUp)="onSocketUp($event)" (click)="setActiveDialogue.emit(getDialogUID(item))">
       </app-dialogue-node>
     </ng-container>
   </div>

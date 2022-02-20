@@ -27,6 +27,7 @@ export class NodeEditorComponent implements OnInit {
   @Output() setResponseFollowUp = new EventEmitter<any>();
   @Output() setNodePosition = new EventEmitter<any>();
   @Output() setViewPosition = new EventEmitter<any>();
+  @Output() setActiveDialogue = new EventEmitter<any>();
 
   @ViewChild('canvas') canvasElement!: ElementRef;
 

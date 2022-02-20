@@ -41,7 +41,8 @@
       <div fxLayout class="wrapper">
         <app-node-editor fxFlex="1 1 auto" [dialogue]="getDialogue()" [start]="form.controls['start'].value"
           [editorData]="form.controls['editor'].value" (setResponseFollowUp)="onSetResponseFollowUp($event)"
-          (setNodePosition)="onSetNodePosition($event)" (setViewPosition)="onSetViewPosition($event)">
+          (setNodePosition)="onSetNodePosition($event)" (setViewPosition)="onSetViewPosition($event)"
+          (setActiveDialogue)="onSetActiveDialogue($event)">
         </app-node-editor>
 
         <div fxFlex="1 1 33%" [fxFlex.lt-md]="'1 1 100%'" class="sidebar" [formGroup]="form">
@@ -64,7 +65,8 @@
           </mat-card>
 
           <mat-accordion>
-            <mat-expansion-panel formArrayName="dialogue" *ngFor="let item of getDialogue().controls; let i = index;">
+            <mat-expansion-panel #dialogueItem formArrayName="dialogue"
+              *ngFor="let item of getDialogue().controls; let i = index;" (opened)="activeDialogue = getDialogUID(item)" [expanded]="activeDialogue === getDialogUID(item)">
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   {{ getNPC(item) }}
@@ -86,7 +88,7 @@
           </mat-accordion>
         </div>
       </div>
-      
+
       <button class="add-dialogue-button" mat-fab color="primary" aria-label="Example icon button with a delete icon"
         (click)="addDialogue()">
         <mat-icon>add</mat-icon>
