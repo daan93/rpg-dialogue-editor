@@ -126,8 +126,8 @@ export class AppComponent implements OnInit {
       followUp: '',
       responses: new FormArray([]),
       editor: this.formBuilder.group({
-        x: 0,
-        y: 0,
+        x: 64 - this.form.get('editor')?.get('viewPos')?.get('x')?.value / this.form.get('editor')?.get('viewPos')?.get('scale')?.value,
+        y: 64 - this.form.get('editor')?.get('viewPos')?.get('y')?.value / this.form.get('editor')?.get('viewPos')?.get('scale')?.value,
       })
     });
   }
@@ -141,6 +141,7 @@ export class AppComponent implements OnInit {
   deleteDialogue(index: number): void {
     this.activeDialogue = '';
     this.getDialogue().removeAt(index);
+    // TODO: Remove references
   }
 
   getDialogueItemById(id: string) {
