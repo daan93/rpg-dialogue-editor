@@ -36,10 +36,10 @@ export class AppComponent implements OnInit {
   previewInput = new FormControl('');
 
   preview: string = '';
+  activeDialogue = '';
   zoomScale = 1;
   panzoomCanvas!: PanZoom;
   sockets: Socket[] = [];
-  activeDialogue = '';
 
   @ViewChild('canvas') canvasElement!: ElementRef;
 

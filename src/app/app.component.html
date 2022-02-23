@@ -2,17 +2,17 @@
   <span>RPG Dialogue Editor</span>
 </mat-toolbar>
 
-<mat-tab-group backgroundColor="primary">
-  <mat-tab label="Dialogue">
-    <ng-template matTabContent>
-      <div fxLayout class="wrapper">
-        <app-node-editor fxFlex="1 1 auto" [dialogue]="getDialogue()" [activeDialogue]="activeDialogue"
-          [start]="form.controls['start'].value" [editorData]="form.controls['editor'].value"
-          (setResponseFollowUp)="onSetResponseFollowUp($event)" (setNodePosition)="onSetNodePosition($event)"
-          (setViewPosition)="onSetViewPosition($event)" (setActiveDialogue)="onSetActiveDialogue($event)">
-        </app-node-editor>
+<div fxLayout class="wrapper">
+  <app-node-editor fxFlex="1 1 auto" [dialogue]="getDialogue()" [activeDialogue]="activeDialogue"
+    [start]="form.controls['start'].value" [editorData]="form.controls['editor'].value"
+    (setResponseFollowUp)="onSetResponseFollowUp($event)" (setNodePosition)="onSetNodePosition($event)"
+    (setViewPosition)="onSetViewPosition($event)" (setActiveDialogue)="onSetActiveDialogue($event)">
+  </app-node-editor>
 
-        <div fxFlex="1 1 33%" [fxFlex.lt-md]="'1 1 100%'" class="sidebar" [formGroup]="form">
+  <div fxFlex="1 1 480px" [fxFlex.lt-md]="'1 1 100%'" class="sidebar" [formGroup]="form">
+    <mat-tab-group>
+      <mat-tab label="Dialogue">
+        <ng-template matTabContent>
           <mat-card>
             <mat-form-field appearance="outline">
               <mat-label>Name</mat-label>
@@ -54,20 +54,16 @@
               </ng-template>
             </mat-expansion-panel>
           </mat-accordion>
-        </div>
-      </div>
 
-      <button class="add-dialogue-button" mat-fab color="primary" aria-label="Example icon button with a delete icon"
-        (click)="addDialogue()">
-        <mat-icon>add</mat-icon>
-      </button>
-    </ng-template>
-  </mat-tab>
+          <button class="add-dialogue-button" mat-fab color="primary"
+            aria-label="Example icon button with a delete icon" (click)="addDialogue()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </ng-template>
+      </mat-tab>
 
-  <mat-tab label="Import/Export">
-    <div class="mdc-layout-grid">
-      <div class="mdc-layout-grid__inner">
-        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
+      <mat-tab label="Import/Export">
+        <div class="sidebar-content">
           <h3>Import</h3>
 
           <mat-form-field appearance="outline">
@@ -77,9 +73,6 @@
           </mat-form-field>
 
           <button mat-raised-button color="primary" (click)="fromJSON(import.value)">Import</button>
-        </div>
-
-        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6">
           <h3>Export</h3>
 
           <mat-form-field appearance="outline">
@@ -87,15 +80,15 @@
             <textarea matInput readonly placeholder="Build or import first." [value]="toJSON()" rows="12"></textarea>
           </mat-form-field>
         </div>
-      </div>
-    </div>
-  </mat-tab>
+      </mat-tab>
 
-  <mat-tab label="preview">
-    <div class="mdc-layout-grid">
-      <div class="mdc-layout-grid__inner">
-        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-          <mat-card *ngIf="preview !== ''">
+      <mat-tab label="preview">
+        <div class="sidebar-content">
+          <button mat-raised-button (click)="setPreview(form.get('start')?.value)">Reset preview</button>
+
+          <br><br>
+
+          <div *ngIf="preview !== ''">
             {{ getDialogueItemById(preview).npc }}
             <br><br>
 
@@ -125,11 +118,9 @@
               <button mat-raised-button color="primary"
                 (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
             </div>
-          </mat-card>
-
-          <button mat-raised-button (click)="setPreview(form.get('start')?.value)">Reset preview</button>
+          </div>
         </div>
-      </div>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

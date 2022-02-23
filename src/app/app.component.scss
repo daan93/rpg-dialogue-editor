@@ -1,16 +1,15 @@
 mat-tab-group {
-  height: calc(100vh - 64px);
+  height: 100%;
 }
 
 .wrapper {
-  height: 100%;
+  height: calc(100vh - 64px);
 }
 
 .sidebar {
   position: relative;
   height: 100%;
   overflow: auto;
-  padding: 16px;
   box-shadow: 0 0 10px rgba(0,0,0,.2);
 
   mat-panel-title {
@@ -19,34 +18,15 @@ mat-tab-group {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  &-content {
+    padding: 16px;
+  }
 }
 
 .add-dialogue-button {
   position: fixed;
   bottom: 16px;
   right: 16px;
-}
-
-#canvas-wrapper {
-  width: 100%;
-  height: calc(100vh - 112px);
-  overflow: hidden;
-
-  > div {
-    display: flex;
-  }
-
-  svg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: visible!important;
-  }
-
-  app-dialogue-node {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
 }
   
