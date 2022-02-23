@@ -3,46 +3,13 @@
 </mat-toolbar>
 
 <mat-tab-group backgroundColor="primary">
-  <!-- <mat-tab label="Dialogue">
-    <div class="mdc-layout-grid">
-      <div class="mdc-layout-grid__inner">
-        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12" [formGroup]="form">
-          <mat-card>
-            <mat-form-field appearance="outline">
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="name">
-            </mat-form-field>
-
-            <input type="hidden" formControlName="key">
-
-            <mat-form-field appearance="outline">
-              <mat-label>Starting point</mat-label>
-              <mat-select formControlName="start">
-                <mat-option *ngFor="let item of getDialogue().controls; let i = index;" [value]="getDialogUID(item)">
-                  {{ getNPC(item) }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </mat-card>
-
-          <ng-container formArrayName="dialogue" *ngFor="let item of getDialogue().controls; let i = index;">
-            <app-dialogue-item [formGroupName]="i" [dialogue]="getDialogue().controls" (delete)="deleteDialogue(i)">
-            </app-dialogue-item>
-          </ng-container>
-
-          <button mat-raised-button color="primary" (click)="addDialogue()">Add a dialogue item</button>
-        </div>
-      </div>
-    </div>
-  </mat-tab> -->
-
   <mat-tab label="Dialogue">
     <ng-template matTabContent>
       <div fxLayout class="wrapper">
-        <app-node-editor fxFlex="1 1 auto" [dialogue]="getDialogue()" [start]="form.controls['start'].value"
-          [editorData]="form.controls['editor'].value" (setResponseFollowUp)="onSetResponseFollowUp($event)"
-          (setNodePosition)="onSetNodePosition($event)" (setViewPosition)="onSetViewPosition($event)"
-          (setActiveDialogue)="onSetActiveDialogue($event)">
+        <app-node-editor fxFlex="1 1 auto" [dialogue]="getDialogue()" [activeDialogue]="activeDialogue"
+          [start]="form.controls['start'].value" [editorData]="form.controls['editor'].value"
+          (setResponseFollowUp)="onSetResponseFollowUp($event)" (setNodePosition)="onSetNodePosition($event)"
+          (setViewPosition)="onSetViewPosition($event)" (setActiveDialogue)="onSetActiveDialogue($event)">
         </app-node-editor>
 
         <div fxFlex="1 1 33%" [fxFlex.lt-md]="'1 1 100%'" class="sidebar" [formGroup]="form">
@@ -66,7 +33,8 @@
 
           <mat-accordion>
             <mat-expansion-panel #dialogueItem formArrayName="dialogue"
-              *ngFor="let item of getDialogue().controls; let i = index;" (opened)="activeDialogue = getDialogUID(item)" [expanded]="activeDialogue === getDialogUID(item)">
+              *ngFor="let item of getDialogue().controls; let i = index;" (afterExpand)="scrollToPanel(i)"
+              (opened)="activeDialogue = getDialogUID(item)" [expanded]="activeDialogue === getDialogUID(item)">
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   {{ getNPC(item) }}

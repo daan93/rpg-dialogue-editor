@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import * as uuid from 'uuid';
 import { PanZoom } from 'panzoom';
 
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit {
   @ViewChild('canvas') canvasElement!: ElementRef;
 
   @ViewChildren(DialogueNodeComponent) dialogueNodes!: QueryList<DialogueNodeComponent>;
+  @ViewChildren('dialogueItem') dialogueItems!: QueryList<MatExpansionPanel>;
 
   constructor(
     private formBuilder: FormBuilder) { }
@@ -95,6 +97,10 @@ export class AppComponent implements OnInit {
 
   onSetActiveDialogue(uid: string) {
     this.activeDialogue = uid;
+  }
+
+  scrollToPanel(i: number) {
+    this.dialogueItems.toArray()[i]._body.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
   getDialogUID(item: any) {

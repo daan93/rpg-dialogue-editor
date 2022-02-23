@@ -1,6 +1,6 @@
 <div class="example-box" cdkDrag [cdkDragDisabled]="dragDisabled" (cdkDragStarted)="startDragging($event)"
   (cdkDragMoved)="dragging($event)" (cdkDragEnded)="endDragging($event)" [cdkDragConstrainPosition]="dragConstrainPoint"
-  [cdkDragFreeDragPosition]="pos">
+  [cdkDragFreeDragPosition]="pos" [class.active]="active">
 
   <div class="question" *ngIf="item.uid !== 'start'">
     <app-dialogue-node-socket [uid]="item.uid" type="input" (pointerdown)="InputSocketDown(item.uid)"

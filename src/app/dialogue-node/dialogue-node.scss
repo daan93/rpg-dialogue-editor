@@ -14,7 +14,8 @@
     outline-color: #8494ED;
   }
 
-  &:active {
+  &:active,
+  &.active {
     outline-color: #3F51B5;
   }
 }

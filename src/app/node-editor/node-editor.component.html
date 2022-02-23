@@ -14,13 +14,12 @@
     </app-dialogue-node>
 
     <ng-container *ngFor="let item of dialogue.controls; let i = index;">
-
       <svg viewBox="-1 -1 102 52" width="102px" height="52px"
         *ngFor="let response of getConnections(getDialogUID(item))">
         <path [attr.d]="getResponsePath(getDialogUID(item), response)" stroke="#3F51B5" stroke-width="3" fill="none" />
       </svg>
 
-      <app-dialogue-node [zoomScale]="panzoomTransform.scale" [item]="getDialogueItemById(getDialogUID(item))"
+      <app-dialogue-node [zoomScale]="panzoomTransform.scale" [item]="getDialogueItemById(getDialogUID(item))" [active]="activeDialogue === getDialogUID(item)"
         (dragStart)="pausePanzoom()" (dragEnd)="nodeDragEnd($event)" (socketDown)="onSocketDown($event)"
         (socketUp)="onSocketUp($event)" (click)="setActiveDialogue.emit(getDialogUID(item))">
       </app-dialogue-node>

@@ -1,5 +1,5 @@
 import { CdkDrag } from '@angular/cdk/drag-drop';
-import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList, HostBinding } from '@angular/core';
 import { Point, DragRef, CdkDragStart, CdkDragMove, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { DialogueNodeSocketComponent } from '../dialogue-node-socket/dialogue-node-socket.component';
 
@@ -14,6 +14,7 @@ import { DialogueNodeSocketComponent } from '../dialogue-node-socket/dialogue-no
 export class DialogueNodeComponent implements OnInit {
   @Input() zoomScale = 1;
   @Input() item: any = {};
+  @Input() active: boolean = false;
 
   pos = { x: 0, y: 0 };
   draggedPos = { x: 0, y: 0 };

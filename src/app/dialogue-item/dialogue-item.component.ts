@@ -18,8 +18,6 @@ export class DialogueItemComponent implements OnInit {
 
   ngOnInit() {
     this.form = <FormGroup>this.controlContainer.control;
-    // console.log(this.form);
-    // console.log(this.dialogue);
   }
 
   getNPC(item: any) {

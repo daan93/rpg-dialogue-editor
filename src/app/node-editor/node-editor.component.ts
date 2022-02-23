@@ -15,6 +15,7 @@ export class NodeEditorComponent implements OnInit {
   @Input() dialogue!: FormArray;
   @Input() start!: string;
   @Input() editorData!: any;
+  @Input() activeDialogue: string = '';
 
   nativeElement;
   panzoomTransform = { scale: 1, x: 0, y: 0 };
