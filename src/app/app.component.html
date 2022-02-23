@@ -62,6 +62,46 @@
         </ng-template>
       </mat-tab>
 
+      <mat-tab label="preview">
+        <div class="sidebar-content">
+          <button mat-raised-button (click)="onSetActiveDialogue(form.get('start')?.value)">Reset preview</button>
+
+          <br><br>
+
+          <div *ngIf="activeDialogue !== ''">
+            {{ getDialogueItemById(activeDialogue).npc }}
+            <br><br>
+
+            <mat-chip-list *ngIf="getDialogueItemById(activeDialogue).type == 'single'">
+              <mat-chip *ngFor="let response of getDialogueItemById(activeDialogue).responses"
+                (click)="onSetActiveDialogue(response.followUp)">
+                {{ response.response }}
+              </mat-chip>
+            </mat-chip-list>
+
+            <div *ngIf="getDialogueItemById(activeDialogue).type == 'open'">
+              <mat-form-field appearance="outline">
+                <mat-label>Answer</mat-label>
+                <input matInput [formControl]="previewInput">
+              </mat-form-field>
+
+              <button mat-raised-button color="primary"
+                (click)="onSetActiveDialogue(getDialogueItemById(activeDialogue).followUp)">Submit</button>
+            </div>
+
+            <div *ngIf="getDialogueItemById(activeDialogue).type == 'multi'">
+              <mat-checkbox *ngFor="let response of getDialogueItemById(activeDialogue).responses">
+                {{ response.response }}&nbsp;
+              </mat-checkbox>
+              <br><br>
+
+              <button mat-raised-button color="primary"
+                (click)="onSetActiveDialogue(getDialogueItemById(activeDialogue).followUp)">Submit</button>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
       <mat-tab label="Import/Export">
         <div class="sidebar-content">
           <h3>Import</h3>
@@ -79,46 +119,6 @@
             <mat-label>JSON</mat-label>
             <textarea matInput readonly placeholder="Build or import first." [value]="toJSON()" rows="12"></textarea>
           </mat-form-field>
-        </div>
-      </mat-tab>
-
-      <mat-tab label="preview">
-        <div class="sidebar-content">
-          <button mat-raised-button (click)="setPreview(form.get('start')?.value)">Reset preview</button>
-
-          <br><br>
-
-          <div *ngIf="preview !== ''">
-            {{ getDialogueItemById(preview).npc }}
-            <br><br>
-
-            <mat-chip-list *ngIf="getDialogueItemById(preview).type == 'single'">
-              <mat-chip *ngFor="let response of getDialogueItemById(preview).responses"
-                (click)="setPreview(response.followUp)">
-                {{ response.response }}
-              </mat-chip>
-            </mat-chip-list>
-
-            <div *ngIf="getDialogueItemById(preview).type == 'open'">
-              <mat-form-field appearance="outline">
-                <mat-label>Answer</mat-label>
-                <input matInput [formControl]="previewInput">
-              </mat-form-field>
-
-              <button mat-raised-button color="primary"
-                (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
-            </div>
-
-            <div *ngIf="getDialogueItemById(preview).type == 'multi'">
-              <mat-checkbox *ngFor="let response of getDialogueItemById(preview).responses">
-                {{ response.response }}&nbsp;
-              </mat-checkbox>
-              <br><br>
-
-              <button mat-raised-button color="primary"
-                (click)="setPreview(getDialogueItemById(preview).followUp)">Submit</button>
-            </div>
-          </div>
         </div>
       </mat-tab>
     </mat-tab-group>
